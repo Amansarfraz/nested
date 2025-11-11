@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CRUD Users',
+      title: 'Nested Users CRUD',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: UserScreen(),
     );
@@ -23,7 +23,6 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   List users = [];
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController streetController = TextEditingController();
@@ -67,14 +66,12 @@ class _UserScreenState extends State<UserScreen> {
     };
 
     if (editingUserId == null) {
-      // Add
       await http.post(
         Uri.parse('http://127.0.0.1:8000/users'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(user),
       );
     } else {
-      // Update
       await http.put(
         Uri.parse('http://127.0.0.1:8000/users/$editingUserId'),
         headers: {"Content-Type": "application/json"},
@@ -87,13 +84,11 @@ class _UserScreenState extends State<UserScreen> {
     Navigator.pop(context);
   }
 
-  // Delete user
   deleteUser(String id) async {
     await http.delete(Uri.parse('http://127.0.0.1:8000/users/$id'));
     fetchUsers();
   }
 
-  // Fill form for edit
   editUser(Map u) {
     editingUserId = u["id"];
     nameController.text = u["name"];
@@ -111,7 +106,6 @@ class _UserScreenState extends State<UserScreen> {
     )["detail"];
     phoneController.text = phone;
     emailController.text = email;
-
     showFormDialog();
   }
 
@@ -186,7 +180,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Users CRUD")),
+      appBar: AppBar(title: Text("Nested Users")),
       floatingActionButton: FloatingActionButton(
         onPressed: showFormDialog,
         child: Icon(Icons.add),
